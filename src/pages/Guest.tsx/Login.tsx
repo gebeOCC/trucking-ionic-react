@@ -2,6 +2,7 @@ import { IonInput, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButt
 import { useState } from "react";
 import axios from "axios";
 import { Redirect } from "react-router";
+import { Link } from "react-router-dom";
 
 function Login() {
     const [invalidFields, setInvalidFields] = useState([""]);
@@ -36,22 +37,20 @@ function Login() {
             }
             )
                 .then(response => {
-                    setInvalidPass(false)
-                    setInvalidEmail(false)
                     console.log(response.data.message)
                     if (response.data.message === 'Email does not exist' || response.data.message === 'Email not verified') {
                         setInvalidEmail(true)
                     } else if (response.data.message === 'Password is incorrect') {
                         setInvalidEmail(false)
                         setInvalidPass(true);
+                        setForm({
+                            ...form,
+                            password: ''
+                        });
                     }
                     if (response.data.message === 'success') {
                         window.location.reload();
                     }
-                    setForm({
-                        ...form,
-                        password: ''
-                    });
                 })
                 .catch(error => {
                     console.log(error.message)
@@ -61,12 +60,12 @@ function Login() {
     };
 
     const handleChange = (e: any) => {
-        setForm(prev => ({
-            ...prev,
+        setForm({
+            ...form,
             [e.target.name]: e.target.value
-        }));
+        });
     };
-
+        
     return (
         <IonPage>
             <IonHeader>
@@ -108,6 +107,7 @@ function Login() {
                         style={{ width: '80vw' }}>
                         Login
                     </IonButton>
+                    <Link to={"/register"}>Register</Link>
                 </div>
             </IonContent>
         </IonPage>

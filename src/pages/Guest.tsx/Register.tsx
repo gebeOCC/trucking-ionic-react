@@ -2,6 +2,7 @@ import { IonInput, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButt
 import { useState } from "react";
 import axios from "axios";
 import { Redirect } from "react-router";
+import { Link, useHistory } from "react-router-dom";
 
 function Register() {
     const [invalidFields, setInvalidFields] = useState([""]);
@@ -10,11 +11,12 @@ function Register() {
 
     const [form, setForm] = useState({
         email: "",
-        password: "barry",
+        password: "",
         role: "client"
     });
 
     const submit = async () => {
+        const history = useHistory();
 
         setLoading(true);
 
@@ -50,15 +52,33 @@ function Register() {
         }));
     };
 
-    if(redirect){
-        return <Redirect to="/login"/>;
+    if (redirect) {
+        return <Redirect to="/login" />;
     }
+
+    const handleGoBack = () => {
+        history.back();
+    };
 
     return (
         <IonPage>
             <IonHeader>
                 <IonToolbar>
-                    <IonTitle>Register</IonTitle>
+                    {/* <Link to="#" onClick={handleGoBack} style={{ display: 'flex' }}>
+                        <div style={{ width: '50px', pointerEvents: 'none' }}>
+                            <svg
+                                style={{ height: '6vw', alignSelf: 'center', marginLeft: '5px', position: 'relative' }}
+                                image-rendering="optimizeQuality"
+                                fill-rule="evenodd"
+                                clip-rule="evenodd"
+                                viewBox="0 0 267 512.43">
+                                <path
+                                    fill-rule="nonzero"
+                                    d="M263.78 18.9c4.28-4.3 4.3-11.31.04-15.64a10.865 10.865 0 0 0-15.48-.04L3.22 248.38c-4.28 4.3-4.3 11.31-.04 15.64l245.16 245.2c4.28 4.3 11.22 4.28 15.48-.05s4.24-11.33-.04-15.63L26.5 256.22 263.78 18.9z" />
+                            </svg>
+                        </div>
+                    </Link> */}
+                    <IonTitle style={{ textAlign: 'center' }}>Register</IonTitle>
                 </IonToolbar>
             </IonHeader>
             <IonContent fullscreen>
@@ -76,8 +96,8 @@ function Register() {
                     <div>
                         <IonInput
                             type="password"
-                            value={form.password}
                             onIonInput={handleChange}
+                            value={form.password}
                             name="password"
                             style={{ border: 'solid 1px black', width: '80vw' }}
                             placeholder="Password">
