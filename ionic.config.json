@@ -1,0 +1,7 @@
+{
+  "name": "trucking-ionic-react",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
