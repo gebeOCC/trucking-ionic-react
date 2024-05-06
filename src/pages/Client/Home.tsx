@@ -2,12 +2,13 @@ import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton } from 
 import axios from "axios";
 import { useEffect, useState } from "react"
 import axiosInstance from "../../axios/axiosInstance";
+import { Link } from "react-router-dom";
 
 function Home() {
 
     const logout = () => {
         axiosInstance
-            .post('logout', {}, { withCredentials: true })
+            .post('logout')
             .then((response) => {
                 console.log(response.data.message);
                 if (response.data.message === 'success') {
@@ -16,7 +17,6 @@ function Home() {
             })
             .catch((error) => {
                 console.log(error);
-                // Handle logout error
             });
     }
 
@@ -31,6 +31,7 @@ function Home() {
             <IonContent fullscreen>
                 <h1>Home Client</h1>
                 <IonButton onClick={logout}>Logout</IonButton>
+            <a href='/booking'>Book Truck</a>
             </IonContent>
         </IonPage>
     )
