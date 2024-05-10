@@ -1,4 +1,4 @@
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton } from "@ionic/react"
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon } from "@ionic/react"
 import axios from "axios";
 import { useEffect, useState } from "react"
 import axiosInstance from "../../axios/axiosInstance";
@@ -36,4 +36,4 @@ function Home() {
     )
 }
 
-export default Home 
+export default Home
