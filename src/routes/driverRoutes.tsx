@@ -1,11 +1,11 @@
 import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import Home from '../pages/Driver.tsx/Home';
+import Home from '../pages/Driver/Home';
 import '@ionic/react/css/core.css';
-import Travels from '../pages/Driver.tsx/Travels';
-import TravelDetails from '../pages/Driver.tsx/TravelDetails';
-import History from '../pages/Driver.tsx/History';
+import Travels from '../pages/Driver/Travels';
+import TravelDetails from '../pages/Driver/TravelDetails';
+import History from '../pages/Driver/History';
 const DriverRoutes = () => {
     return (
         <IonReactRouter>
