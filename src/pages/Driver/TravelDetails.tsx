@@ -132,7 +132,7 @@ function TravelDetails() {
                                                     <h3>{convertToAMPM(travelDetails.pickup_time)}</h3>
                                                     <h3>Amount to pay: {travelDetails.price}</h3>
                                                     <h3>Vehicle: {travelDetails.model}</h3>
-                                                    <h3>Plat number: {travelDetails.plate_number}</h3>
+                                                    <h3>Plate number: {travelDetails.plate_number}</h3>
                                                 </IonCol>
                                                 <IonCol size="6">
                                                     <IonImg src={`http://localhost:8000/goods-photo/${travelDetails.goods_photo}`} alt="Goods Photo" />

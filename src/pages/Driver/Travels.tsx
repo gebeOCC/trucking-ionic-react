@@ -60,7 +60,7 @@ function Travels() {
                     {segmentValue === 'travels' ? (
                         <>
                             {travels.map((travel) => (
-                                <>
+                                <div key={travel.id}>
                                     {travel.travel_status !== 'delivered' &&
                                     <IonItem key={travel.id} routerLink={`/travels/${travel.id}`}>
                                             <IonLabel className="ion-text-wrap">
@@ -84,7 +84,7 @@ function Travels() {
                                             </IonLabel>
                                         </IonItem>
                                     }
-                                </>
+                                </div >
                             ))}
                             {noBookingsAssigned && (
                                 <div style={{ textAlign: 'center', marginTop: '20px' }}>
@@ -95,7 +95,7 @@ function Travels() {
                     ) : (
                             <>
                                 {travels.map((travel) => (
-                                    <>
+                                    < div key={travel.id}>
                                         {travel.travel_status === 'delivered' &&
                                             <IonItem key={travel.id} routerLink={`/travels/${travel.id}`}>
                                                 <IonLabel className="ion-text-wrap">
@@ -119,7 +119,7 @@ function Travels() {
                                                 </IonLabel>
                                             </IonItem>
                                         }
-                                    </>
+                                    </ div>
                                 ))}
                             </>
                     )}

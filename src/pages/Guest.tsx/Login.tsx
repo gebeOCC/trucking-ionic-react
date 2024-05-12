@@ -1,8 +1,9 @@
-import { IonInput, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton } from "@ionic/react";
+import { IonInput, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon, IonItem } from "@ionic/react";
 import { useState } from "react";
 import axios from "axios";
 import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
+import { lockClosed, eye } from "ionicons/icons";
 
 function Login() {
     const [invalidFields, setInvalidFields] = useState([""]);
@@ -65,7 +66,7 @@ function Login() {
             [e.target.name]: e.target.value
         });
     };
-        
+
     return (
         <IonPage>
             <IonHeader>
@@ -77,25 +78,33 @@ function Login() {
                 <div style={{ height: '95vh', width: '100vw', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', justifyContent: 'center' }}>
                     <div>
                         <IonInput
+                            label="Email"
+                            labelPlacement="floating"
+                            color={invalidFields.includes('email') ? 'danger' : ''}
                             type="email"
+                            fill="outline"
                             value={form.email}
                             onIonInput={handleChange}
                             name="email"
-                            style={{ border: 'solid 1px black', width: '80vw' }}
-                            placeholder="Email">
-                        </IonInput>
+                            style={{ width: '80vw', border: invalidFields.includes('email') ? '1px solid red' : '' }}
+                            clearInput={true}
+                        />
+
                         {invalidEmail && (
                             <p style={{ margin: '0', color: 'red' }}>Email doesn't exist</p>
                         )}
                     </div>
                     <div>
                         <IonInput
+                            label="password"
+                            labelPlacement="floating"
+                            color={invalidFields.includes('email') ? 'danger' : ''}
+                            fill="outline"
                             type="password"
                             value={form.password}
                             onIonInput={handleChange}
                             name="password"
-                            style={{ border: 'solid 1px black', width: '80vw' }}
-                            placeholder="Password">
+                            style={{ width: '80vw', border: invalidFields.includes('password') ? '1px solid red' : '' }}>
                         </IonInput>
                         {invalidPass && (
                             <p style={{ margin: '0', color: 'red' }}>Password is incorrect</p>

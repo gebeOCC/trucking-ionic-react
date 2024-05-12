@@ -1,7 +1,7 @@
 import { IonContent, IonPage } from "@ionic/react";
 import axiosInstance from "../../../axios/axiosInstance";
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, step } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css'; // Import Mapbox GL CSS
 
@@ -10,7 +10,7 @@ mapboxgl.accessToken = 'pk.eyJ1IjoiMWJhcnJ5MTIzIiwiYSI6ImNsdmdpa2IzcjA2YzYya255d
 import MapboxDirections from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions';
 import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css';
 
-const RouteDetails = ({ form, setForm, mapStyle, setMapStyle, selectedPrice }) => {
+const RouteDetails = ({ form, setForm, mapStyle, setMapStyle, selectedPrice, invalidFields, step }) => {
 
     const mapContainer = useRef(null);
     const map = useRef(null);
@@ -19,29 +19,31 @@ const RouteDetails = ({ form, setForm, mapStyle, setMapStyle, selectedPrice }) =
     const [zoom, setZoom] = useState(4); // Zoom level for Philippines
     const [pickup, setPickup] = useState([form.pickup_location_lng, form.pickup_location_lat]);
     const [dropoff, setDropoff] = useState([form.dropoff_location_lng, form.dropoff_location_lat]);
-    const [distance, storeDistance] = useState(0)
-    const [duration, storeDuration] = useState('')
+    const [distance, setDistance] = useState(0);
+    const [duration, setDuration] = useState('');
+
+    const calculatedPrice = 0.10 * selectedPrice * distance + selectedPrice;
+
+    const setPrice = () => {
+        for (let i = 0; i < 20; i++) {
+            if (distance !== 0) {
+                const timer = setTimeout(() => {
+                    setForm({
+                        ...form,
+                        price: calculatedPrice
+                    });
+                },500);
+                return () => clearTimeout(timer)
+            }
+        }
+    }
 
     useEffect(() => {
-        // Calculate price based on 10% of selectedPrice multiplied by distance
-        const calculatedPrice = 0.10 * selectedPrice * distance + selectedPrice;
-
-        // Update the form state with the new price
-        setForm(prevForm => ({
-            ...prevForm,
-            price: calculatedPrice
-        }));
-    }, [selectedPrice, distance]);
+        setPrice()
+    }, [distance, duration]);
 
     useEffect(() => {
-        // Calculate price based on 10% of selectedPrice multiplied by distance
-        const calculatedPrice = 0.10 * selectedPrice * distance + selectedPrice;
-
-        // Update the form state with the new price
-        setForm(prevForm => ({
-            ...prevForm,
-            price: calculatedPrice
-        }));
+        setPrice()
     }, []);
 
     useEffect(() => {
@@ -80,12 +82,7 @@ const RouteDetails = ({ form, setForm, mapStyle, setMapStyle, selectedPrice }) =
     }, [pickup, dropoff]);
 
     useEffect(() => {
-        const timer = setTimeout(() => {
-            getRoute();
-        }, 1000); // 1000 milliseconds = 1 second
-
-        // Clean up the timeout when the component unmounts
-        return () => clearTimeout(timer);
+        getRoute();
     }, []);
 
     const getRoute = () => {
@@ -129,8 +126,8 @@ const RouteDetails = ({ form, setForm, mapStyle, setMapStyle, selectedPrice }) =
                 duration: durationMinutes
             })
 
-            storeDistance(distanceKilometers);
-            storeDuration(durationMinutes);
+            setDistance(distanceKilometers);
+            setDuration(durationMinutes);
         });
     };
 
@@ -204,53 +201,53 @@ const RouteDetails = ({ form, setForm, mapStyle, setMapStyle, selectedPrice }) =
     };
 
     return (
-        <div style={{ height: '100%', width: '100%' }}>
-            <h1>Route details</h1>
+        <div style={{ height: '93%', width: '100%', position: 'absolute' }}>
+            <div ref={mapContainer} style={{ height: '100%', width: '100%' }} />
+            <div
+                style={{
+                    position: 'fixed', top: '8%', left: '2%', backgroundColor: 'rgba(29, 78, 216, 0.2)',
+                    color: 'white',
+                    padding: '12px',
+                    fontFamily: 'monospace',
+                    borderRadius: '8px',
+                }}>
 
-            <div style={{ height: '100%', width: '100%', paddingTop: '20px', position: 'absolute' }}>
-                <div style={{ height: '60%', width: '100%' }}>
-                    <div ref={mapContainer} style={{ height: '100%', width: '100%' }} />
-                    <div>
-                        <div
-                            style={{
-                                position: 'fixed', top: '12%', left: '1%', backgroundColor: 'rgba(29, 78, 216, 0.2)',
-                                color: 'white',
-                                padding: '12px',
-                                fontFamily: 'monospace',
-                                borderRadius: '8px',
-                            }}>
-                            <button style={{
-                                backgroundColor: 'rgba(59, 130, 246, 0.4)',
-                                color: 'white',
-                                padding: '8px 16px',
-                                borderRadius: '4px',
-                                marginRight: '8px',
-                                border: '1px solid rgba(59, 130, 246, 0.9)'
-                            }} onClick={() => handleMapStyleChange('mapbox://styles/1barry123/clvi2k5vd00an01ob3n2e2qmu')}>
-                                Street
-                            </button>
-                            <button style={{
-                                backgroundColor: 'rgba(59, 130, 246, 0.4)',
-                                color: 'white',
-                                padding: '8px 16px',
-                                borderRadius: '4px',
-                                marginRight: '8px',
-                                border: '1px solid rgba(59, 130, 246, 0.9)'
-                            }} onClick={() => handleMapStyleChange('mapbox://styles/1barry123/clvi1sfb2013x01q1bgcx7zy7')}>
-                                Satellite
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* Display marker positions */}
-                    <div>
-                        <h3>Marker Positions</h3>
-                        <p>Distance: {distance} km</p>
-                        <p>Duration: {duration} min</p>
-                        <p>Price: ₱{form.price}</p>
-                    </div>
+                <button style={{
+                    backgroundColor: `${mapStyle === 'mapbox://styles/1barry123/clvi2k5vd00an01ob3n2e2qmu' ? 'rgba(59, 130, 246)' : 'rgba(59, 130, 246, 0.2)'}`,
+                    color: 'white',
+                    padding: '8px 16px',
+                    borderRadius: '4px',
+                    marginRight: '8px',
+                    border: '1px solid rgba(59, 130, 246, 0.9)'
+                }} onClick={() => handleMapStyleChange('mapbox://styles/1barry123/clvi2k5vd00an01ob3n2e2qmu')}>
+                    Street
+                </button>
+                <button style={{
+                    backgroundColor: `${mapStyle === 'mapbox://styles/1barry123/clvi1sfb2013x01q1bgcx7zy7' ? 'rgba(59, 130, 246)' : 'rgba(59, 130, 246, 0.2)'}`,
+                    color: 'white',
+                    padding: '8px 16px',
+                    borderRadius: '4px',
+                    marginRight: '8px',
+                    border: '1px solid rgba(59, 130, 246, 0.9)'
+                }} onClick={() => handleMapStyleChange('mapbox://styles/1barry123/clvi1sfb2013x01q1bgcx7zy7')}>
+                    Satellite
+                </button>
+                <div>
+                    <p>Distance: {distance} km</p>
+                    <p>Duration: {duration} min</p>
+                    <p>Price: ₱{calculatedPrice}</p>
                 </div>
             </div>
+            <h1
+                style={{
+                    position: 'fixed',
+                    top: '7%',
+                    right: '12%',
+                    fontFamily: 'monospace',
+                    margin: '0',
+                }}>
+                {step}/6
+            </h1>
         </div>
     );
 }

@@ -37,8 +37,6 @@ function signatureCanva({ signature, setSignature, setSignatureCanvaOpen }) {
 
     return (
         <>
-            <h1>signature Canva</h1>
-
             <IonCard
                 style={{ textAlign: 'center', height: '60vh'}}>
                 <canvas

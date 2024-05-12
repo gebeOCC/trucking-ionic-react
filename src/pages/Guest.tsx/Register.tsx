@@ -2,7 +2,7 @@ import { IonInput, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButt
 import { useState } from "react";
 import axios from "axios";
 import { Redirect } from "react-router";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function Register() {
     const [invalidFields, setInvalidFields] = useState([""]);
@@ -15,8 +15,7 @@ function Register() {
         role: "client"
     });
 
-    const submit = async () => {
-        const history = useHistory();
+    const submitRegister = async () => {
 
         setLoading(true);
 
@@ -104,11 +103,12 @@ function Register() {
                         </IonInput>
                     </div>
                     <IonButton
-                        onClick={submit}
+                        onClick={submitRegister}
                         disabled={loading}
                         style={{ width: '80vw' }}>
                         Register
                     </IonButton>
+                    <Link to={"/login"}>Back</Link>
                 </div>
             </IonContent>
         </IonPage>

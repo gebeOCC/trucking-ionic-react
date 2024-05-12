@@ -1,7 +1,7 @@
-import { IonContent, IonInput, IonLabel, IonPage, IonTextarea } from "@ionic/react";
+import { IonCard, IonContent, IonInput, IonLabel, IonPage, IonTextarea } from "@ionic/react";
 import axiosInstance from "../../../axios/axiosInstance";
 
-const DropoffLocationDetails = ({ form, setForm }) => {
+const DropoffLocationDetails = ({ form, setForm, invalidFields, step }) => {
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -9,16 +9,18 @@ const DropoffLocationDetails = ({ form, setForm }) => {
     
     return (
         <>
-            <h1>Dropoff Location details</h1>
-
             <div style={{ display: 'flex', flexDirection: 'column', gap: '3vh', alignItems: 'center', padding: '10%' }}>
+
+                <IonCard>
+                    <h1 style={{ margin: '0' }}>Dropoff Location</h1>
+                </IonCard>
                 <div style={{ width: '100%' }}>
                     <IonLabel>Dropoff location address:</IonLabel>
                     <IonInput
                         name="dropoff_location_address"
                         value={form.dropoff_location_address}
-                        onIonChange={handleChange}
-                        style={{ border: '1px solid black' }}>
+                        onIonInput={handleChange}
+                        style={{ border: invalidFields.includes('dropoff_location_address') ? '1px solid red' : '1px solid black' }}>
                     </IonInput>
                 </div>
                 <div style={{ width: '100%' }}>
@@ -26,8 +28,8 @@ const DropoffLocationDetails = ({ form, setForm }) => {
                     <IonInput
                         name="recipient_name"
                         value={form.recipient_name}
-                        onIonChange={handleChange}
-                        style={{ border: '1px solid black' }}>
+                        onIonInput={handleChange}
+                        style={{ border: invalidFields.includes('recipient_name') ? '1px solid red' : '1px solid black' }}>
                     </IonInput>
                 </div>
                 <div style={{ width: '100%' }}>
@@ -35,8 +37,8 @@ const DropoffLocationDetails = ({ form, setForm }) => {
                     <IonInput
                         name="recipient_contact_number"
                         value={form.recipient_contact_number}
-                        onIonChange={handleChange}
-                        style={{ border: '1px solid black' }}>
+                        onIonInput={handleChange}
+                        style={{ border: invalidFields.includes('recipient_contact_number') ? '1px solid red' : '1px solid black' }}>
                     </IonInput>
                 </div>
                 <div style={{ width: '100%' }}>
@@ -45,10 +47,20 @@ const DropoffLocationDetails = ({ form, setForm }) => {
                         name="dropoff_location_details"
                         value={form.dropoff_location_details}
                         onIonInput={handleChange}
-                        style={{ border: '1px solid black' }}>
+                        style={{ border: invalidFields.includes('dropoff_location_details') ? '1px solid red' : '1px solid black' }}>
                     </IonTextarea>
                 </div>
             </div>
+            <h1
+                style={{
+                    position: 'fixed',
+                    top: '7%',
+                    right: '2%',
+                    fontFamily: 'monospace',
+                    margin: '0',
+                }}>
+                {step}/6
+            </h1>
         </>
     );
 }

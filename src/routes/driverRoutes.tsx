@@ -1,42 +1,50 @@
 import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import Home from '../pages/Driver/Home';
 import '@ionic/react/css/core.css';
 import Travels from '../pages/Driver/Travels';
 import TravelDetails from '../pages/Driver/TravelDetails';
-import History from '../pages/Driver/History';
+import Menu from '../pages/Menu';
+import { IonIcon } from '@ionic/react';
+import { menu, menuOutline, carSport, carSportOutline } from 'ionicons/icons';
+import { useState } from 'react';
+
 const DriverRoutes = () => {
+    const [travelIcon, setTravelIcon] = useState(location.pathname.startsWith('/travels'));
+    const [menuIcon, setMenuIcon] = useState(location.pathname.startsWith('/menu'));
+
+    const handleTravelClick = () => {
+        setTravelIcon(true);
+        setMenuIcon(false);
+    };
+
+    const handleMenuClick = () => {
+        setTravelIcon(false);
+        setMenuIcon(true);
+    };
+
     return (
         <IonReactRouter>
+            <Route>
+                <Redirect to="/travels" />
+            </Route>
             <IonTabs>
                 <IonRouterOutlet>
-                    <Redirect exact path="/" to="/travels" />
-                    
                     <Route path="/travels" render={() => <Travels />} exact={true} />
-
-                    <Route>
-                        <Redirect to="/travels" />
-                    </Route>
-
                     <Route path="/travels/:id">
                         <TravelDetails />
                     </Route>
-
-                    <Route path="/history" render={() => <History />} exact={true} />
-
+                    <Route path="/menu" render={() => <Menu />} exact={true} />
                 </IonRouterOutlet>
-
                 <IonTabBar slot="bottom">
-
-                    <IonTabButton tab="travels/*" href="/travels">
-                        <IonLabel>Travels</IonLabel>
+                    <IonTabButton tab="travels/*" href="/travels" onClick={handleTravelClick}>
+                        <IonIcon icon={travelIcon ? carSport : carSportOutline} />
+                        <IonLabel style={{ margin: '0' }}>Travels</IonLabel>
                     </IonTabButton>
-
-                    <IonTabButton tab="history/*" href="/history">
-                        <IonLabel>History</IonLabel>
+                    <IonTabButton tab="menu/*" href="/menu" onClick={handleMenuClick}>
+                        <IonIcon icon={menuIcon ? menu : menuOutline} />
+                        <IonLabel style={{ margin: '0' }}>Menu</IonLabel>
                     </IonTabButton>
-
                 </IonTabBar>
             </IonTabs>
         </IonReactRouter>

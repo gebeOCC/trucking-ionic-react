@@ -17,11 +17,19 @@ export function convertToAMPM(time) {
 
 export function timeNow() {
     const time = new Date();
-    const timeOptions = { hour12: false };
-    const timeString = time.toLocaleTimeString(undefined, timeOptions);
+    const timeOptions = { hour12: false, hour: '2-digit', minute: '2-digit' };
+    const timeString = time.toLocaleTimeString('en-US', timeOptions);
 
     return timeString;
 }
+
+
+export function dateNow() {
+    const dateNow = new Date().toISOString().split('T')[0]
+
+    return dateNow;
+}
+
 
 export const dataURItoBlob = (dataURI) => {
     // Convert base64 data URI to Blob
