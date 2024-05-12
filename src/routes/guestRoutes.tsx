@@ -7,21 +7,24 @@ import Register from '../pages/Guest.tsx/Register';
 import '@ionic/react/css/core.css';
 
 function guestRoutes() {
-  return (
-    <IonApp>
-      <IonReactRouter>
-        <IonRouterOutlet>
-          <Route path="/login" component={Login} exact />
-          <Route exact path="/Register">
-            <Register />
-          </Route>
-          <Route>
-            <Redirect to="/login" />
-          </Route>
-        </IonRouterOutlet>
-      </IonReactRouter>
-    </IonApp >
-  )
+    return (
+        <IonApp>
+            <IonReactRouter>
+                <Route>
+                    <Redirect to="/login" />
+                </Route>
+
+                <Route path="/login">
+                    <Login />
+                </Route>
+
+                <Route path="/register">
+                    <Register />
+                </Route>
+
+            </IonReactRouter>
+        </IonApp >
+    )
 };
 
 export default guestRoutes;

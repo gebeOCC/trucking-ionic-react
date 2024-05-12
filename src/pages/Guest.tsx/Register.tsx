@@ -1,18 +1,51 @@
-import { IonInput, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton } from "@ionic/react";
-import { useState } from "react";
+import { IonInput, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonBackButton, IonButtons, IonModal } from "@ionic/react";
+import { useRef, useState } from "react";
 import axios from "axios";
 import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
+import Name from "./Register/Name";
+import Birthday from "./Register/Birthday";
+import PhoneNumber from "./Register/PhonNumber";
+import Gender from "./Register/Gender";
+import Address from "./Register/Address";
+import Credentials from "./Register/Credentials";
+import { IonIcon } from "@ionic/react";
+import { chevronBackOutline } from "ionicons/icons";
+import { useHistory } from "react-router";
 
 function Register() {
+    const history = useHistory();
+
     const [invalidFields, setInvalidFields] = useState([""]);
     const [loading, setLoading] = useState(false);
     const [redirect, setRedirect] = useState(false);
+    const [currentStep, setCurrentStep] = useState(0);
+
+    const modal = useRef<HTMLIonModalElement>(null);
+
+    function dismiss() {
+        modal.current?.dismiss();
+    }
+
+
+    function openModal() {
+        modal.current?.present();
+
+    }
 
     const [form, setForm] = useState({
         email: "",
         password: "",
-        role: "client"
+        role: "client",
+        phone_number: "",
+        first_name: "",
+        last_name: "",
+        date_of_birth: "",
+        gender: "",
+        barangay: "",
+        city: "",
+        province: "",
+        zip: "",
     });
 
     const submitRegister = async () => {
@@ -29,11 +62,13 @@ function Register() {
             return;
         }
 
+        console.log(form)
+
         if (!loading) {
             await axios.post('http://localhost:8000/api/register', form
             )
                 .then(response => {
-                    console.log(response.data);
+                    console.log(response.data.message);
                     setRedirect(true);
                 })
                 .catch(error => {
@@ -55,61 +90,45 @@ function Register() {
         return <Redirect to="/login" />;
     }
 
-    const handleGoBack = () => {
-        history.back();
-    };
+    const previous = () => {
+        if (currentStep !== 0) {
+            setCurrentStep(currentStep - 1)
+        } else {
+            console.log('back')
+            openModal()
+        }
+    }
+
+    const next = () => {
+        setCurrentStep(currentStep + 1)
+    }
+
+    const steps = [
+        <Name form={form} setForm={setForm} currentStep={currentStep} setCurrentStep={setCurrentStep} />,
+        <Birthday form={form} setForm={setForm} currentStep={currentStep} setCurrentStep={setCurrentStep} />,
+        <PhoneNumber form={form} setForm={setForm} currentStep={currentStep} setCurrentStep={setCurrentStep} />,
+        <Gender form={form} setForm={setForm} currentStep={currentStep} setCurrentStep={setCurrentStep} />,
+        <Address form={form} setForm={setForm} currentStep={currentStep} setCurrentStep={setCurrentStep} />,
+        <Credentials form={form} setForm={setForm} />,
+    ];
 
     return (
         <IonPage>
             <IonHeader>
-                <IonToolbar>
-                    {/* <Link to="#" onClick={handleGoBack} style={{ display: 'flex' }}>
-                        <div style={{ width: '50px', pointerEvents: 'none' }}>
-                            <svg
-                                style={{ height: '6vw', alignSelf: 'center', marginLeft: '5px', position: 'relative' }}
-                                image-rendering="optimizeQuality"
-                                fill-rule="evenodd"
-                                clip-rule="evenodd"
-                                viewBox="0 0 267 512.43">
-                                <path
-                                    fill-rule="nonzero"
-                                    d="M263.78 18.9c4.28-4.3 4.3-11.31.04-15.64a10.865 10.865 0 0 0-15.48-.04L3.22 248.38c-4.28 4.3-4.3 11.31-.04 15.64l245.16 245.2c4.28 4.3 11.22 4.28 15.48-.05s4.24-11.33-.04-15.63L26.5 256.22 263.78 18.9z" />
-                            </svg>
-                        </div>
-                    </Link> */}
-                    <IonTitle style={{ textAlign: 'center' }}>Register</IonTitle>
+                <IonToolbar style={{ display: 'flex' }}>
+                    <IonIcon onClick={previous} slot="start" icon={chevronBackOutline} style={{ fontSize: '190%', marginRight: '34vw' }} />
+                    <h3 style={{ margin: '0', width: 'auto' }}>Register</h3>
                 </IonToolbar>
             </IonHeader>
             <IonContent fullscreen>
-                <div style={{ height: '95vh', width: '100vw', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', justifyContent: 'center' }}>
-                    <div>
-                        <IonInput
-                            type="email"
-                            value={form.email}
-                            onIonInput={handleChange}
-                            name="email"
-                            style={{ border: 'solid 1px black', width: '80vw' }}
-                            placeholder="Email">
-                        </IonInput>
+                {steps[currentStep]}
+                <IonModal style={{ width: '100vw', height: '20vh', paddingTop: '80vh', paddingleft: '10vw', paddingRight: '10vw' }} id="open-custom-dialog" ref={modal}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10%', height: '100%', width: '100%', padding: '10%' }}>
+                        <h3 style={{ margin: '0' }}>Do you want to stop creating your account?</h3>
+                        <p style={{ color: 'grey' }} onClick={dismiss}>Continue Creating Account</p>
+                        <p style={{ color: 'blue' }} onClick={() => { history.push('login') }}>Stop creating account</p>
                     </div>
-                    <div>
-                        <IonInput
-                            type="password"
-                            onIonInput={handleChange}
-                            value={form.password}
-                            name="password"
-                            style={{ border: 'solid 1px black', width: '80vw' }}
-                            placeholder="Password">
-                        </IonInput>
-                    </div>
-                    <IonButton
-                        onClick={submitRegister}
-                        disabled={loading}
-                        style={{ width: '80vw' }}>
-                        Register
-                    </IonButton>
-                    <Link to={"/login"}>Back</Link>
-                </div>
+                </IonModal>
             </IonContent>
         </IonPage>
     )
