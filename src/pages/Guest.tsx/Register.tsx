@@ -1,8 +1,5 @@
-import { IonInput, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonBackButton, IonButtons, IonModal } from "@ionic/react";
+import { IonPage, IonHeader, IonToolbar, IonContent, IonModal } from "@ionic/react";
 import { useRef, useState } from "react";
-import axios from "axios";
-import { Redirect } from "react-router";
-import { Link } from "react-router-dom";
 import Name from "./Register/Name";
 import Birthday from "./Register/Birthday";
 import PhoneNumber from "./Register/PhonNumber";
@@ -12,13 +9,12 @@ import Credentials from "./Register/Credentials";
 import { IonIcon } from "@ionic/react";
 import { chevronBackOutline } from "ionicons/icons";
 import { useHistory } from "react-router";
+import { dateNow } from "../Utilities/utils";
 
 function Register() {
     const history = useHistory();
 
     const [invalidFields, setInvalidFields] = useState([""]);
-    const [loading, setLoading] = useState(false);
-    const [redirect, setRedirect] = useState(false);
     const [currentStep, setCurrentStep] = useState(0);
 
     const modal = useRef<HTMLIonModalElement>(null);
@@ -30,7 +26,6 @@ function Register() {
 
     function openModal() {
         modal.current?.present();
-
     }
 
     const [form, setForm] = useState({
@@ -40,7 +35,7 @@ function Register() {
         phone_number: "",
         first_name: "",
         last_name: "",
-        date_of_birth: "",
+        date_of_birth: dateNow(),
         gender: "",
         barangay: "",
         city: "",
@@ -48,47 +43,7 @@ function Register() {
         zip: "",
     });
 
-    const submitRegister = async () => {
 
-        setLoading(true);
-
-        const invalidFields = [];
-        if (!form.email) invalidFields.push('email');
-        if (!form.password) invalidFields.push('password');
-        setInvalidFields(invalidFields);
-
-        if (invalidFields.length > 1) {
-            setLoading(false)
-            return;
-        }
-
-        console.log(form)
-
-        if (!loading) {
-            await axios.post('http://localhost:8000/api/register', form
-            )
-                .then(response => {
-                    console.log(response.data.message);
-                    setRedirect(true);
-                })
-                .catch(error => {
-                    console.log(error.response.data.message)
-
-                });
-        }
-        setLoading(false)
-    };
-
-    const handleChange = (e: any) => {
-        setForm(prev => ({
-            ...prev,
-            [e.target.name]: e.target.value
-        }));
-    };
-
-    if (redirect) {
-        return <Redirect to="/login" />;
-    }
 
     const previous = () => {
         if (currentStep !== 0) {
@@ -100,15 +55,39 @@ function Register() {
     }
 
     const next = () => {
+        const invalidFields = [];
+
+        if (currentStep === 0) {
+            if (!form.first_name) invalidFields.push('first_name');
+            if (!form.last_name) invalidFields.push('last_name');
+        } else if (currentStep === 1) {
+            if (!form.date_of_birth) invalidFields.push('date_of_birth');
+        } else if (currentStep === 2) {
+            if (!form.phone_number) invalidFields.push('phone_number');
+        } else if (currentStep === 3) {
+            if (!form.gender) invalidFields.push('gender');
+        } else if (currentStep === 4) {
+            if (!form.barangay) invalidFields.push('barangay');
+            if (!form.city) invalidFields.push('city');
+            if (!form.province) invalidFields.push('province');
+            if (!form.zip) invalidFields.push('zip');
+        }
+
+        setInvalidFields(invalidFields);
+
+        if (invalidFields.length > 0) {
+            return;
+        }
+
         setCurrentStep(currentStep + 1)
     }
 
     const steps = [
-        <Name form={form} setForm={setForm} currentStep={currentStep} setCurrentStep={setCurrentStep} />,
-        <Birthday form={form} setForm={setForm} currentStep={currentStep} setCurrentStep={setCurrentStep} />,
-        <PhoneNumber form={form} setForm={setForm} currentStep={currentStep} setCurrentStep={setCurrentStep} />,
-        <Gender form={form} setForm={setForm} currentStep={currentStep} setCurrentStep={setCurrentStep} />,
-        <Address form={form} setForm={setForm} currentStep={currentStep} setCurrentStep={setCurrentStep} />,
+        <Name form={form} setForm={setForm} next={next} invalidFields={invalidFields}/>,
+        <Birthday form={form} setForm={setForm} next={next} invalidFields={invalidFields}/>,
+        <PhoneNumber form={form} setForm={setForm} next={next} invalidFields={invalidFields}/>,
+        <Gender form={form} setForm={setForm} next={next} invalidFields={invalidFields}/>,
+        <Address form={form} setForm={setForm} next={next} invalidFields={invalidFields}/>,
         <Credentials form={form} setForm={setForm} />,
     ];
 

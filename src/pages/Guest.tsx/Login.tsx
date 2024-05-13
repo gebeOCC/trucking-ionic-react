@@ -1,7 +1,6 @@
 import { IonInput, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon, IonItem } from "@ionic/react";
 import { useState } from "react";
 import axios from "axios";
-import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
 import { lockClosed, eye } from "ionicons/icons";
 
@@ -24,8 +23,6 @@ function Login() {
         if (!form.email) invalidFields.push('email');
         if (!form.password) invalidFields.push('password');
         setInvalidFields(invalidFields);
-
-        // console.log(form)
 
         if (invalidFields.length > 1) {
             setLoading(false)
@@ -69,11 +66,6 @@ function Login() {
 
     return (
         <IonPage>
-            <IonHeader>
-                <IonToolbar>
-                    <IonTitle>Login</IonTitle>
-                </IonToolbar>
-            </IonHeader>
             <IonContent fullscreen>
                 <div style={{ height: '95vh', width: '100vw', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', justifyContent: 'center' }}>
                     <div>
