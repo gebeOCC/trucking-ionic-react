@@ -4,6 +4,7 @@ import axiosInstance from "../../axios/axiosInstance"
 import { formatDate, convertToAMPM } from "../Utilities/utils"
 import { add, calendarOutline, locationOutline, timeOutline } from "ionicons/icons"
 import { useHistory } from 'react-router-dom';
+import config from "../../config"
 
 function Bookings() {
     const [pendingBookings, setPendingBookings] = useState([])
@@ -77,7 +78,7 @@ function Bookings() {
                                 </IonLabel>
                                 <IonImg
                                     className="square-image"
-                                    src={`http://localhost:8000/goods-photo/${booking.goods_photo}`}
+                                    src={`${config.hostname}${config.paths.goodsPhoto}/${booking.goods_photo}`}
                                 />
 
                             </IonItem>
@@ -108,7 +109,7 @@ function Bookings() {
                                 </IonLabel>
                                 <IonImg
                                     className="square-image"
-                                    src={`http://localhost:8000/goods-photo/${booking.goods_photo}`}
+                                    src={`${config.hostname}${config.paths.goodsPhoto}/${booking.goods_photo}`}
                                 />
                             </IonItem>
                         </IonCard>
@@ -140,7 +141,7 @@ function Bookings() {
                                 </IonLabel>
                                 <IonImg
                                     className="square-image"
-                                    src={`http://localhost:8000/goods-photo/${booking.goods_photo}`}
+                                    src={`${config.hostname}${config.paths.goodsPhoto}/${booking.goods_photo}`}
                                 />
                             </IonItem>
                         </IonCard>

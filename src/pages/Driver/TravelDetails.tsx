@@ -21,6 +21,7 @@ import axiosInstance from '../../axios/axiosInstance';
 import { formatDate, convertToAMPM } from "../Utilities/utils";
 import SignatureCanva from './SignatureCanva';
 import { timeNow, dataURItoBlob } from '../Utilities/utils';
+import config from '../../config';
 
 function TravelDetails() {
     const id = useParams<{ id: string }>();
@@ -135,7 +136,7 @@ function TravelDetails() {
                                                     <h3>Plate number: {travelDetails.plate_number}</h3>
                                                 </IonCol>
                                                 <IonCol size="6">
-                                                    <IonImg src={`http://localhost:8000/goods-photo/${travelDetails.goods_photo}`} alt="Goods Photo" />
+                                                    <IonImg src={`${config.hostname}${config.paths.goodsPhoto}/${travelDetails.goods_photo}`} alt="Goods Photo" />
                                                 </IonCol>
                                             </IonRow>
                                         </IonGrid>
@@ -180,7 +181,7 @@ function TravelDetails() {
                                                 </IonCol>
                                                 {travelDetails.travel_status !== 'in progress' &&
                                                     <IonCol size="6">
-                                                        <IonImg src={`http://localhost:8000/goods-photo/${travelDetails.pickup_goods_photo}`} alt="Goods Photo" />
+                                                        <IonImg src={`${config.hostname}${config.paths.goodsPhoto}/${travelDetails.pickup_goods_photo}`} alt="Goods Photo" />
                                                     </IonCol>
                                                 }
 
@@ -242,7 +243,7 @@ function TravelDetails() {
 
                                                 {travelDetails.travel_status === 'delivered' &&
                                                     <IonCol size="6">
-                                                        <IonImg src={`http://localhost:8000/goods-photo/${travelDetails.dropoff_goods_photo}`} alt="Goods Photo" />
+                                                        <IonImg src={`${config.hostname}${config.paths.goodsPhoto}/${travelDetails.dropoff_goods_photo}`} alt="Goods Photo" />
                                                     </IonCol>
                                                 }
 
@@ -258,7 +259,7 @@ function TravelDetails() {
                                     </IonCard>
                                     <IonCard>
                                         {travelDetails.travel_status === 'delivered' &&
-                                            <IonImg src={`http://localhost:8000/signature/${travelDetails.signature_image}`} alt="Goods Photo" />
+                                            <IonImg src={`${config.hostname}${config.paths.signature}/${travelDetails.signature_image}`} alt="Goods Photo" />
                                         }
                                         {signature &&
                                             <IonImg src={signature} alt="Signature" />

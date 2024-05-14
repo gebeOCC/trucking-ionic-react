@@ -1,8 +1,7 @@
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonCardContent, IonCard, IonLabel, IonImg, IonCol, IonGrid, IonRow, IonAvatar } from "@ionic/react";
 import axiosInstance from "../axios/axiosInstance";
 import { useEffect, useState } from "react";
-import { personAdd } from "ionicons/icons";
-
+import config from "../config";
 
 function Menu() {
     const [profile, setProfile] = useState<any>([]);
@@ -44,7 +43,7 @@ function Menu() {
                             style={{ textAlign: 'center', alignItems: 'center' , display: 'flex', gap: '2%'}}>
                             <IonAvatar>
                                 <IonImg
-                                    src={`http://localhost:8000/profile-pictures/${profile.profile_picture}`}
+                                    src={`${config.hostname}${config.paths.profilePictures}/${profile.profile_picture}`}
                                     alt="Goods Photo" />
                             </IonAvatar>
                             <h1

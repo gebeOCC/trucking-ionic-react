@@ -18,6 +18,7 @@ import {
 import { useParams } from 'react-router';
 import axiosInstance from '../../axios/axiosInstance';
 import { formatDate, convertToAMPM } from "../Utilities/utils";
+import config from '../../config';
 
 function BookingDetails() {
     const id = useParams<{ id: string }>();
@@ -75,7 +76,7 @@ function BookingDetails() {
                                         <h3>Driver: {travelDetails.full_name}</h3>
                                     </IonCol>
                                     <IonCol size="6">
-                                        <IonImg src={`http://localhost:8000/goods-photo/${travelDetails.goods_photo}`} alt="Goods Photo" />
+                                        <IonImg src={`${config.hostname}${config.paths.goodsPhoto}/${travelDetails.goods_photo}`} alt="Goods Photo" />
                                     </IonCol>
                                 </IonRow>
                             </IonGrid>
@@ -96,7 +97,7 @@ function BookingDetails() {
                                     </IonCol>
                                     {travelDetails.travel_status !== 'in progress' &&
                                         <IonCol size="6">
-                                            <IonImg src={`http://localhost:8000/goods-photo/${travelDetails.pickup_goods_photo}`} alt="Goods Photo" />
+                                            <IonImg src={`${config.hostname}${config.paths.goodsPhoto}/${travelDetails.pickup_goods_photo}`} alt="Goods Photo" />
                                         </IonCol>
                                     }
                                 </IonRow>
@@ -119,7 +120,7 @@ function BookingDetails() {
 
                                     {travelDetails.travel_status === 'delivered' &&
                                         <IonCol size="6">
-                                            <IonImg src={`http://localhost:8000/goods-photo/${travelDetails.dropoff_goods_photo}`} alt="Goods Photo" />
+                                            <IonImg src={`${config.hostname}${config.paths.goodsPhoto}/${travelDetails.dropoff_goods_photo}`} alt="Goods Photo" />
                                         </IonCol>
                                     }
 
@@ -128,7 +129,7 @@ function BookingDetails() {
                         </IonCard>
                         <IonCard>
                             {travelDetails.travel_status === 'delivered' &&
-                                <IonImg src={`http://localhost:8000/signature/${travelDetails.signature_image}`} alt="Goods Photo" />
+                                <IonImg src={`${config.hostname}${config.paths.signature}/${travelDetails.signature_image}`} alt="Goods Photo" />
                             }
                         </IonCard>
                     </IonCardContent>

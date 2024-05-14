@@ -3,6 +3,7 @@ import { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { lockClosed, eye } from "ionicons/icons";
+import config from "../../config";
 
 function Login() {
     const [invalidFields, setInvalidFields] = useState([""]);
@@ -30,7 +31,7 @@ function Login() {
         }
 
         if (!loading) {
-            await axios.post('http://localhost:8000/api/login', form, {
+            await axios.post(`${config.hostname}/api/login`, form, {
                 withCredentials: true
             }
             )
