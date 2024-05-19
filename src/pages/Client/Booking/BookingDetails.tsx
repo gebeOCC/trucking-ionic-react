@@ -3,7 +3,7 @@ import axiosInstance from "../../../axios/axiosInstance";
 import { timeNow, dateNow, formatDate, convertToAMPM } from "../../Utilities/utils";
 import { useHistory } from "react-router-dom";
 
-const BookingDetails = ({ form, setForm, consoleLog, step }) => {
+const BookingDetails = ({ form, step, id }) => {
     const history = useHistory();
     const submit = async () => {
         const formData = new FormData();
@@ -38,16 +38,27 @@ const BookingDetails = ({ form, setForm, consoleLog, step }) => {
         formData.append('duration', form.duration);
         formData.append('price', form.price);
 
-        for (const [key, value] of formData.entries()) {
-            console.log(`${key}: ${value}`);
+        // for (const [key, value] of formData.entries()) {
+        //     console.log(`${key}: ${value}`);
+        // }
+
+        if (id) {
+            await axiosInstance.post(`update-booking/${id}`, formData)
+                .then(response => {
+                    console.log(response.data)
+                    if (response.data.message === 'success') {
+                        history.push('/bookings');
+                    }
+                })
+        } else {
+            await axiosInstance.post('add-booking', formData)
+                .then(response => {
+                    console.log(response.data)
+                    if (response.data.message === 'success') {
+                        history.push('/bookings');
+                    }
+                })
         }
-        await axiosInstance.post('add-booking', formData)
-            .then(response => {
-                console.log(response.data)
-                if(response.data.message === 'success'){
-                    history.push('/bookings');
-                }
-            })
     }
 
     return (

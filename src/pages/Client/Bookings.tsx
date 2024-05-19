@@ -10,13 +10,12 @@ function Bookings() {
     const [pendingBookings, setPendingBookings] = useState([])
     const [approvedBookings, setApprovedBookings] = useState([])
     const [deliveredBookings, setDeliveredBookings] = useState([])
-    const [ipendingBookings, isetPendingBookings] = useState([])
-    const [iapprovedBookings, isetApprovedBookings] = useState([])
-    const [ideliveredBookings, isetDeliveredBookings] = useState([])
+    const [declinedBookings, setDeclinedBookings] = useState([])
 
     const fetchBookings = async () => {
         await axiosInstance.get('get-client-bookings')
             .then(response => {
+                setDeclinedBookings(response.data.declined)
                 setPendingBookings(response.data.pending)
                 setApprovedBookings(response.data.approved)
                 setDeliveredBookings(response.data.delivered)
@@ -53,6 +52,35 @@ function Bookings() {
                     <IonRefresherContent></IonRefresherContent>
                 </IonRefresher>
                 <IonList>
+                    {declinedBookings.map((booking) => (
+                        <IonCard key={booking.id}>
+                            <IonItem routerLink={`/bookings/edit-booking/${booking.id}`}>
+                                <IonLabel className="ion-text-wrap">
+                                    <h2 style={{color: 'red'}}>{booking.booking_status}</h2>
+                                    <p>
+                                        <IonIcon icon={calendarOutline} slot="start" />
+                                        {formatDate(booking.pickup_date)}
+                                    </p>
+                                    <p>
+                                        <IonIcon icon={timeOutline} slot="start" />
+                                        {convertToAMPM(booking.pickup_time)}
+                                    </p>
+                                    <p>
+                                        <IonIcon icon={locationOutline} slot="start" />
+                                        {booking.pickup_location_address}
+                                    </p>
+                                    <p>
+                                        <IonIcon icon={locationOutline} slot="start" />
+                                        {booking.dropoff_location_address}
+                                    </p>
+                                </IonLabel>
+                                <IonImg
+                                    className="square-image"
+                                    src={`${config.hostname}${config.paths.goodsPhoto}/${booking.goods_photo}`}
+                                />
+                            </IonItem>
+                        </IonCard>
+                    ))}
                     {pendingBookings.map((booking) => (
                         <IonCard key={booking.id}>
                             <IonItem>
@@ -147,7 +175,7 @@ function Bookings() {
                         </IonCard>
                     ))}
                 </IonList>
-                    
+
                 <IonFab slot="fixed" vertical="bottom" horizontal="end" onClick={addBooking}>
                     <IonButton size="large">
                         <IonIcon

@@ -9,6 +9,7 @@ import BookingDetails from '../pages/Client/BookingDetails';
 import { IonIcon } from '@ionic/react';
 import { menu, menuOutline, readerOutline, reader } from 'ionicons/icons';
 import { useState } from 'react';
+import Declined from '../pages/Client/Declined';
 
 function clientRoutes() {
     const [bookingIcon, setBookingIcon] = useState(location.pathname.startsWith('/travels'));
@@ -40,6 +41,10 @@ function clientRoutes() {
 
                     <Route path="/bookings/add-booking">
                         <Booking />
+                    </Route>
+
+                    <Route path="/bookings/edit-booking/:id">
+                        <Declined />
                     </Route>
 
                     <Route path="/menu" render={() => <Menu />} exact={true} />
